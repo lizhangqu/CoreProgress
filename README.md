@@ -33,6 +33,8 @@ dependencies {
 }
 ```
 
+Notice that it will not compile Okhttp library,you should add it yourself
+
 **upload**
 
 ```
