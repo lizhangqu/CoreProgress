@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Headers;
@@ -90,6 +91,18 @@ public class MainActivity extends AppCompatActivity {
                 downloadProgeress.setProgress((int) ((100 * bytesRead) / contentLength));
                 //Toast.makeText(getApplicationContext(), bytesRead + " " + contentLength + " " + done, Toast.LENGTH_LONG).show();
             }
+
+            @Override
+            public void onUIResponseStart(long bytesRead, long contentLength, boolean done) {
+                super.onUIResponseStart(bytesRead, contentLength, done);
+                Toast.makeText(getApplicationContext(),"start",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onUIResponseFinish(long bytesRead, long contentLength, boolean done) {
+                super.onUIResponseFinish(bytesRead, contentLength, done);
+                Toast.makeText(getApplicationContext(),"end",Toast.LENGTH_SHORT).show();
+            }
         };
 
         //构造请求
@@ -141,6 +154,18 @@ public class MainActivity extends AppCompatActivity {
                 //ui层回调
                 uploadProgress.setProgress((int) ((100 * bytesWrite) / contentLength));
                 //Toast.makeText(getApplicationContext(), bytesWrite + " " + contentLength + " " + done, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onUIRequestStart(long bytesWrite, long contentLength, boolean done) {
+                super.onUIRequestStart(bytesWrite, contentLength, done);
+                Toast.makeText(getApplicationContext(),"start",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onUIRequestFinish(long bytesWrite, long contentLength, boolean done) {
+                super.onUIRequestFinish(bytesWrite, contentLength, done);
+                Toast.makeText(getApplicationContext(),"end",Toast.LENGTH_SHORT).show();
             }
         };
 

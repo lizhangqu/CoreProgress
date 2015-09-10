@@ -6,7 +6,7 @@ CoreProgress is a framework to support OkHttp upload and download progress
 Changelog
 ---------
 
-Current version 0.0.1 released on 3th Sept 2015
+Current version 0.0.2 released on 10th Sept 2015
 
 See details in [CHANGELOG](https://github.com/lizhangqu/CoreProgress/blob/master/CHANGELOG.md)
 
@@ -29,7 +29,7 @@ Usage
 
 ```
 dependencies {
-  compile 'cn.edu.zafu:coreprogress:0.0.1'
+  compile 'cn.edu.zafu:coreprogress:0.0.2'
 }
 ```
 
@@ -144,6 +144,51 @@ ProgressHelper.addProgressResponseListener(client, uiProgressResponseListener).n
 	}
 });
 ```
+
+**start or finish(version 0.0.2 support)**
+If you need listener the start or finish callback,you need to override the method **onUIRequestStart** or **onUIRequestFinish** in **UIProgressRequestListener**,**onUIResponseStart** or **onUIResponseFinish** in **UIProgressResponseListener**
+
+
+```
+//这个是ui线程回调，可直接操作UI
+final UIProgressRequestListener uiProgressRequestListener = new UIProgressRequestListener() {
+    @Override
+    public void onUIRequestProgress(long bytesWrite, long contentLength, boolean done) {
+        Toast.makeText(getApplicationContext(), bytesWrite + " " + contentLength + " " + done, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onUIRequestStart(long bytesWrite, long contentLength, boolean done) {
+        Toast.makeText(getApplicationContext(),"start",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onUIRequestFinish(long bytesWrite, long contentLength, boolean done) {
+        Toast.makeText(getApplicationContext(),"end",Toast.LENGTH_SHORT).show();
+    }
+};
+```
+
+```
+//这个是ui线程回调，可直接操作UI
+final UIProgressResponseListener uiProgressResponseListener = new UIProgressResponseListener() {
+    @Override
+    public void onUIResponseProgress(long bytesRead, long contentLength, boolean done) {
+       Toast.makeText(getApplicationContext(), bytesRead + " " + contentLength + " " + done, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onUIResponseStart(long bytesRead, long contentLength, boolean done) {
+        Toast.makeText(getApplicationContext(),"start",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onUIResponseFinish(long bytesRead, long contentLength, boolean done) {
+        Toast.makeText(getApplicationContext(),"end",Toast.LENGTH_SHORT).show();
+    }
+};
+```
+
 
 ## License
 
