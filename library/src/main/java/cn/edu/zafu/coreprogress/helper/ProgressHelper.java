@@ -22,8 +22,7 @@ import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 
-import cn.edu.zafu.coreprogress.listener.ProgressRequestListener;
-import cn.edu.zafu.coreprogress.listener.ProgressResponseListener;
+import cn.edu.zafu.coreprogress.listener.ProgressListener;
 import cn.edu.zafu.coreprogress.progress.ProgressRequestBody;
 import cn.edu.zafu.coreprogress.progress.ProgressResponseBody;
 
@@ -40,7 +39,7 @@ public class ProgressHelper {
      * @param progressListener 进度回调接口
      * @return 包装后的OkHttpClient，使用clone方法返回
      */
-    public static OkHttpClient addProgressResponseListener(OkHttpClient client,final ProgressResponseListener progressListener){
+    public static OkHttpClient addProgressResponseListener(OkHttpClient client,final ProgressListener progressListener){
         //克隆
         OkHttpClient clone = client.clone();
         //增加拦截器
@@ -64,7 +63,7 @@ public class ProgressHelper {
      * @param progressRequestListener 进度回调接口
      * @return 包装后的进度回调请求体
      */
-    public static ProgressRequestBody addProgressRequestListener(RequestBody requestBody,ProgressRequestListener progressRequestListener){
+    public static ProgressRequestBody addProgressRequestListener(RequestBody requestBody,ProgressListener progressRequestListener){
         //包装请求体
         return new ProgressRequestBody(requestBody,progressRequestListener);
     }

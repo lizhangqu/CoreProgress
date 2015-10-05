@@ -6,7 +6,7 @@ CoreProgress is a framework to support OkHttp upload and download progress
 Changelog
 ---------
 
-Current version 0.0.2 released on 10th Sept 2015
+Current version 0.0.3 released on 8th Oct 2015
 
 See details in [CHANGELOG](https://github.com/lizhangqu/CoreProgress/blob/master/CHANGELOG.md)
 
@@ -29,7 +29,7 @@ Usage
 
 ```
 dependencies {
-  compile 'cn.edu.zafu:coreprogress:0.0.2'
+  compile 'cn.edu.zafu:coreprogress:0.0.3'
 }
 ```
 
@@ -41,10 +41,14 @@ Notice that it will not compile Okhttp library,you should add it yourself.
 //OkHttpClient请求Client
 private static final OkHttpClient client = new OkHttpClient();
 
+File file = new File("/sdcard/1.doc");
+//此文件必须在手机上存在，实际情况下请自行修改，这个目录下的文件只是在我手机中存在。
+
+
 //这个是非ui线程回调，不可直接操作UI
-final ProgressRequestListener progressListener = new ProgressRequestListener() {
+final ProgressListener progressListener = new ProgressListener() {
 	@Override
-	public void onRequestProgress(long bytesWrite, long contentLength, boolean done) {
+	public void onProgress(long bytesWrite, long contentLength, boolean done) {
 		Log.e("TAG", "bytesWrite:" + bytesWrite);
 		Log.e("TAG", "contentLength" + contentLength);
 		Log.e("TAG", (100 * bytesWrite) / contentLength + " % done ");
@@ -52,19 +56,35 @@ final ProgressRequestListener progressListener = new ProgressRequestListener() {
 		Log.e("TAG", "================================");
 	}
 };
+
+
 //这个是ui线程回调，可直接操作UI
-final UIProgressRequestListener uiProgressRequestListener = new UIProgressRequestListener() {
+final UIProgressListener uiProgressRequestListener = new UIProgressListener() {
 	@Override
-	public void onUIRequestProgress(long bytesWrite, long contentLength, boolean done) {
+	public void onUIProgress(long bytesWrite, long contentLength, boolean done) {
 		Log.e("TAG", "bytesWrite:" + bytesWrite);
 		Log.e("TAG", "contentLength" + contentLength);
 		Log.e("TAG", (100 * bytesWrite) / contentLength + " % done ");
 		Log.e("TAG", "done:" + done);
 		Log.e("TAG", "================================");
+		//ui层回调
+		uploadProgress.setProgress((int) ((100 * bytesWrite) / contentLength));
+		//Toast.makeText(getApplicationContext(), bytesWrite + " " + contentLength + " " + done, Toast.LENGTH_LONG).show();
+	}
+
+	@Override
+	public void onUIStart(long bytesWrite, long contentLength, boolean done) {
+		super.onUIStart(bytesWrite, contentLength, done);
+		Toast.makeText(getApplicationContext(),"start",Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onUIFinish(long bytesWrite, long contentLength, boolean done) {
+		super.onUIFinish(bytesWrite, contentLength, done);
+		Toast.makeText(getApplicationContext(),"end",Toast.LENGTH_SHORT).show();
 	}
 };
-//文件
-File file = new File("文件路径");
+
 //构造上传请求，类似web表单
 RequestBody requestBody = new MultipartBuilder().type(MultipartBuilder.FORM)
 		.addFormDataPart("hello", "android")
@@ -73,7 +93,7 @@ RequestBody requestBody = new MultipartBuilder().type(MultipartBuilder.FORM)
 		.build();
 
 //进行包装，使其支持进度回调
-final Request request = new Request.Builder().url("上传的服务器路径").post(ProgressHelper.addProgressRequestListener(requestBody, uiProgressRequestListener)).build();
+final Request request = new Request.Builder().url("http://your.url").post(ProgressHelper.addProgressRequestListener(requestBody, uiProgressRequestListener)).build();
 //开始请求
 client.newCall(request).enqueue(new Callback() {
 	@Override
@@ -95,9 +115,9 @@ client.newCall(request).enqueue(new Callback() {
 private static final OkHttpClient client = new OkHttpClient();
 
 //这个是非ui线程回调，不可直接操作UI
-final ProgressResponseListener progressResponseListener = new ProgressResponseListener() {
+final ProgressListener progressResponseListener = new ProgressListener() {
 	@Override
-	public void onResponseProgress(long bytesRead, long contentLength, boolean done) {
+	public void onProgress(long bytesRead, long contentLength, boolean done) {
 		Log.e("TAG", "bytesRead:" + bytesRead);
 		Log.e("TAG", "contentLength:" + contentLength);
 		Log.e("TAG", "done:" + done);
@@ -111,9 +131,9 @@ final ProgressResponseListener progressResponseListener = new ProgressResponseLi
 
 
 //这个是ui线程回调，可直接操作UI
-final UIProgressResponseListener uiProgressResponseListener = new UIProgressResponseListener() {
+final UIProgressListener uiProgressResponseListener = new UIProgressListener() {
 	@Override
-	public void onUIResponseProgress(long bytesRead, long contentLength, boolean done) {
+	public void onUIProgress(long bytesRead, long contentLength, boolean done) {
 		Log.e("TAG", "bytesRead:" + bytesRead);
 		Log.e("TAG", "contentLength:" + contentLength);
 		Log.e("TAG", "done:" + done);
@@ -123,12 +143,26 @@ final UIProgressResponseListener uiProgressResponseListener = new UIProgressResp
 		}
 		Log.e("TAG", "================================");
 		//ui层回调
+		downloadProgeress.setProgress((int) ((100 * bytesRead) / contentLength));
+		//Toast.makeText(getApplicationContext(), bytesRead + " " + contentLength + " " + done, Toast.LENGTH_LONG).show();
+	}
+
+	@Override
+	public void onUIStart(long bytesRead, long contentLength, boolean done) {
+		super.onUIStart(bytesRead, contentLength, done);
+		Toast.makeText(getApplicationContext(),"start",Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onUIFinish(long bytesRead, long contentLength, boolean done) {
+		super.onUIFinish(bytesRead, contentLength, done);
+		Toast.makeText(getApplicationContext(),"end",Toast.LENGTH_SHORT).show();
 	}
 };
 
 //构造请求
 final Request request1 = new Request.Builder()
-		.url("下载的服务器路径")
+		.url("http://121.41.119.107:81/test/1.doc")
 		.build();
 
 //包装Response使其支持进度回调
@@ -148,48 +182,29 @@ ProgressHelper.addProgressResponseListener(client, uiProgressResponseListener).n
 **start or finish(version 0.0.2 support)**
 
 
-If you need listener the start or finish callback,you need to override the method **onUIRequestStart** or **onUIRequestFinish** in **UIProgressRequestListener**,**onUIResponseStart** or **onUIResponseFinish** in **UIProgressResponseListener**
+If you need listener the start or finish callback,you need to override the method **onUIStart** or **onUIFinish** in **UIProgressListener**
 
 
 ```
 //这个是ui线程回调，可直接操作UI
-final UIProgressRequestListener uiProgressRequestListener = new UIProgressRequestListener() {
+final UIProgressListener uiProgressListener = new UIProgressListener() {
     @Override
-    public void onUIRequestProgress(long bytesWrite, long contentLength, boolean done) {
+    public void onUIProgress(long bytesWrite, long contentLength, boolean done) {
         Toast.makeText(getApplicationContext(), bytesWrite + " " + contentLength + " " + done, Toast.LENGTH_LONG).show();
     }
 
     @Override
-    public void onUIRequestStart(long bytesWrite, long contentLength, boolean done) {
+    public void onUIStart(long bytesWrite, long contentLength, boolean done) {
         Toast.makeText(getApplicationContext(),"start",Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onUIRequestFinish(long bytesWrite, long contentLength, boolean done) {
+    public void onUIFinish(long bytesWrite, long contentLength, boolean done) {
         Toast.makeText(getApplicationContext(),"end",Toast.LENGTH_SHORT).show();
     }
 };
 ```
 
-```
-//这个是ui线程回调，可直接操作UI
-final UIProgressResponseListener uiProgressResponseListener = new UIProgressResponseListener() {
-    @Override
-    public void onUIResponseProgress(long bytesRead, long contentLength, boolean done) {
-       Toast.makeText(getApplicationContext(), bytesRead + " " + contentLength + " " + done, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onUIResponseStart(long bytesRead, long contentLength, boolean done) {
-        Toast.makeText(getApplicationContext(),"start",Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onUIResponseFinish(long bytesRead, long contentLength, boolean done) {
-        Toast.makeText(getApplicationContext(),"end",Toast.LENGTH_SHORT).show();
-    }
-};
-```
 
 
 ## License

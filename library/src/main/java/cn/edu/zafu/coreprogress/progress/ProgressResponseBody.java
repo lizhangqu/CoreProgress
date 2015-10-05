@@ -20,7 +20,7 @@ import com.squareup.okhttp.ResponseBody;
 
 import java.io.IOException;
 
-import cn.edu.zafu.coreprogress.listener.ProgressResponseListener;
+import cn.edu.zafu.coreprogress.listener.ProgressListener;
 import okio.Buffer;
 import okio.BufferedSource;
 import okio.ForwardingSource;
@@ -37,7 +37,7 @@ public class ProgressResponseBody extends ResponseBody {
     //实际的待包装响应体
     private final ResponseBody responseBody;
     //进度回调接口
-    private final ProgressResponseListener progressListener;
+    private final ProgressListener progressListener;
     //包装完成的BufferedSource
     private BufferedSource bufferedSource;
 
@@ -46,7 +46,7 @@ public class ProgressResponseBody extends ResponseBody {
      * @param responseBody 待包装的响应体
      * @param progressListener 回调接口
      */
-    public ProgressResponseBody(ResponseBody responseBody, ProgressResponseListener progressListener) {
+    public ProgressResponseBody(ResponseBody responseBody, ProgressListener progressListener) {
         this.responseBody = responseBody;
         this.progressListener = progressListener;
     }
@@ -98,7 +98,7 @@ public class ProgressResponseBody extends ResponseBody {
                 totalBytesRead += bytesRead != -1 ? bytesRead : 0;
                 //回调，如果contentLength()不知道长度，会返回-1
                 if (progressListener!=null) {
-                    progressListener.onResponseProgress(totalBytesRead, responseBody.contentLength(), bytesRead == -1);
+                    progressListener.onProgress(totalBytesRead, responseBody.contentLength(), bytesRead == -1);
                 }
                 return bytesRead;
             }

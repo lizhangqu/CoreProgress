@@ -22,10 +22,8 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import cn.edu.zafu.coreprogress.helper.ProgressHelper;
-import cn.edu.zafu.coreprogress.listener.ProgressRequestListener;
-import cn.edu.zafu.coreprogress.listener.ProgressResponseListener;
-import cn.edu.zafu.coreprogress.listener.impl.UIProgressRequestListener;
-import cn.edu.zafu.coreprogress.listener.impl.UIProgressResponseListener;
+import cn.edu.zafu.coreprogress.listener.ProgressListener;
+import cn.edu.zafu.coreprogress.listener.impl.UIProgressListener;
 
 public class MainActivity extends AppCompatActivity {
     private static final OkHttpClient client = new OkHttpClient();
@@ -60,9 +58,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void download() {
         //这个是非ui线程回调，不可直接操作UI
-        final ProgressResponseListener progressResponseListener = new ProgressResponseListener() {
+        final ProgressListener progressResponseListener = new ProgressListener() {
             @Override
-            public void onResponseProgress(long bytesRead, long contentLength, boolean done) {
+            public void onProgress(long bytesRead, long contentLength, boolean done) {
                 Log.e("TAG", "bytesRead:" + bytesRead);
                 Log.e("TAG", "contentLength:" + contentLength);
                 Log.e("TAG", "done:" + done);
@@ -76,9 +74,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         //这个是ui线程回调，可直接操作UI
-        final UIProgressResponseListener uiProgressResponseListener = new UIProgressResponseListener() {
+        final UIProgressListener uiProgressResponseListener = new UIProgressListener() {
             @Override
-            public void onUIResponseProgress(long bytesRead, long contentLength, boolean done) {
+            public void onUIProgress(long bytesRead, long contentLength, boolean done) {
                 Log.e("TAG", "bytesRead:" + bytesRead);
                 Log.e("TAG", "contentLength:" + contentLength);
                 Log.e("TAG", "done:" + done);
@@ -93,14 +91,14 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onUIResponseStart(long bytesRead, long contentLength, boolean done) {
-                super.onUIResponseStart(bytesRead, contentLength, done);
+            public void onUIStart(long bytesRead, long contentLength, boolean done) {
+                super.onUIStart(bytesRead, contentLength, done);
                 Toast.makeText(getApplicationContext(),"start",Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onUIResponseFinish(long bytesRead, long contentLength, boolean done) {
-                super.onUIResponseFinish(bytesRead, contentLength, done);
+            public void onUIFinish(long bytesRead, long contentLength, boolean done) {
+                super.onUIFinish(bytesRead, contentLength, done);
                 Toast.makeText(getApplicationContext(),"end",Toast.LENGTH_SHORT).show();
             }
         };
@@ -130,9 +128,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         //这个是非ui线程回调，不可直接操作UI
-        final ProgressRequestListener progressListener = new ProgressRequestListener() {
+        final ProgressListener progressListener = new ProgressListener() {
             @Override
-            public void onRequestProgress(long bytesWrite, long contentLength, boolean done) {
+            public void onProgress(long bytesWrite, long contentLength, boolean done) {
                 Log.e("TAG", "bytesWrite:" + bytesWrite);
                 Log.e("TAG", "contentLength" + contentLength);
                 Log.e("TAG", (100 * bytesWrite) / contentLength + " % done ");
@@ -143,9 +141,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         //这个是ui线程回调，可直接操作UI
-        final UIProgressRequestListener uiProgressRequestListener = new UIProgressRequestListener() {
+        final UIProgressListener uiProgressRequestListener = new UIProgressListener() {
             @Override
-            public void onUIRequestProgress(long bytesWrite, long contentLength, boolean done) {
+            public void onUIProgress(long bytesWrite, long contentLength, boolean done) {
                 Log.e("TAG", "bytesWrite:" + bytesWrite);
                 Log.e("TAG", "contentLength" + contentLength);
                 Log.e("TAG", (100 * bytesWrite) / contentLength + " % done ");
@@ -157,14 +155,14 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onUIRequestStart(long bytesWrite, long contentLength, boolean done) {
-                super.onUIRequestStart(bytesWrite, contentLength, done);
+            public void onUIStart(long bytesWrite, long contentLength, boolean done) {
+                super.onUIStart(bytesWrite, contentLength, done);
                 Toast.makeText(getApplicationContext(),"start",Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onUIRequestFinish(long bytesWrite, long contentLength, boolean done) {
-                super.onUIRequestFinish(bytesWrite, contentLength, done);
+            public void onUIFinish(long bytesWrite, long contentLength, boolean done) {
+                super.onUIFinish(bytesWrite, contentLength, done);
                 Toast.makeText(getApplicationContext(),"end",Toast.LENGTH_SHORT).show();
             }
         };

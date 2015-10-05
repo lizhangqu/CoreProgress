@@ -20,7 +20,7 @@ import com.squareup.okhttp.RequestBody;
 
 import java.io.IOException;
 
-import cn.edu.zafu.coreprogress.listener.ProgressRequestListener;
+import cn.edu.zafu.coreprogress.listener.ProgressListener;
 import okio.Buffer;
 import okio.BufferedSink;
 import okio.ForwardingSink;
@@ -37,7 +37,7 @@ public  class ProgressRequestBody extends RequestBody {
     //实际的待包装请求体
     private final RequestBody requestBody;
     //进度回调接口
-    private final ProgressRequestListener progressListener;
+    private final ProgressListener progressListener;
     //包装完成的BufferedSink
     private BufferedSink bufferedSink;
 
@@ -46,7 +46,7 @@ public  class ProgressRequestBody extends RequestBody {
      * @param requestBody 待包装的请求体
      * @param progressListener 回调接口
      */
-    public ProgressRequestBody(RequestBody requestBody, ProgressRequestListener progressListener) {
+    public ProgressRequestBody(RequestBody requestBody, ProgressListener progressListener) {
         this.requestBody = requestBody;
         this.progressListener = progressListener;
     }
@@ -111,7 +111,7 @@ public  class ProgressRequestBody extends RequestBody {
                 bytesWritten += byteCount;
                 //回调
                 if (progressListener!=null) {
-                    progressListener.onRequestProgress(bytesWritten, contentLength, bytesWritten == contentLength);
+                    progressListener.onProgress(bytesWritten, contentLength, bytesWritten == contentLength);
                 }
             }
         };
