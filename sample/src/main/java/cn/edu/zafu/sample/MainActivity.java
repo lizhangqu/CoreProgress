@@ -8,14 +8,14 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.MultipartBuilder;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
+import okhttp3.Callback;
+import okhttp3.Headers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,14 +26,18 @@ import cn.edu.zafu.coreprogress.listener.ProgressListener;
 import cn.edu.zafu.coreprogress.listener.impl.UIProgressListener;
 
 public class MainActivity extends AppCompatActivity {
-    private static final OkHttpClient client = new OkHttpClient();
+    private static final OkHttpClient client = new OkHttpClient.Builder()
+            //设置超时，不设置可能会报异常
+            .connectTimeout(1000, TimeUnit.MINUTES)
+            .readTimeout(1000, TimeUnit.MINUTES)
+            .writeTimeout(1000, TimeUnit.MINUTES)
+            .build();
     private Button upload,download;
     private ProgressBar uploadProgress,downloadProgeress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initClient();
         initView();
     }
 
@@ -168,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
         //构造上传请求，类似web表单
-        RequestBody requestBody = new MultipartBuilder().type(MultipartBuilder.FORM)
+        RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
                 .addFormDataPart("hello", "android")
                 .addFormDataPart("photo", file.getName(), RequestBody.create(null, file))
                 .addPart(Headers.of("Content-Disposition", "form-data; name=\"another\";filename=\"another.dex\""), RequestBody.create(MediaType.parse("application/octet-stream"), file))
@@ -190,12 +194,4 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-    //设置超时，不设置可能会报异常
-    private void initClient() {
-        client.setConnectTimeout(1000, TimeUnit.MINUTES);
-        client.setReadTimeout(1000, TimeUnit.MINUTES);
-        client.setWriteTimeout(1000, TimeUnit.MINUTES);
-    }
-
-
 }
