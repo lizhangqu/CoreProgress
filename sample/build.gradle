@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion global_compileSdkVersion
+    buildToolsVersion global_buildToolsVersion
 
     defaultConfig {
         applicationId "cn.edu.zafu.sample"
-        minSdkVersion 14
-        targetSdkVersion 22
+        minSdkVersion global_minSdkVersion
+        targetSdkVersion global_targetSdkVersion
         versionCode 1
         versionName "1.0"
     }
@@ -21,7 +21,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile "com.android.support:appcompat-v7:${global_androidSupportVersion}"
     compile project(':library')
-    compile 'com.squareup.okhttp3:okhttp:3.0.0-RC1'
+    provided "com.squareup.okhttp3:okhttp:${global_okhttpVersion}"
 }

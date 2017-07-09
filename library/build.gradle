@@ -1,14 +1,15 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion global_compileSdkVersion
+    buildToolsVersion global_buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion global_minSdkVersion
+        targetSdkVersion global_targetSdkVersion
+
+        consumerProguardFiles project.file("proguard-rules.pro")
+
     }
     buildTypes {
         release {
@@ -20,7 +21,9 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    provided 'com.squareup.okhttp3:okhttp:3.0.0-RC1'
+    provided "com.squareup.okhttp3:okhttp:${global_okhttpVersion}"
 
 }
-apply from: '../bintray.gradle'
+
+apply from: "https://raw.githubusercontent.com/lizhangqu/common-gradle/master/artifact_release.gradle"
+
