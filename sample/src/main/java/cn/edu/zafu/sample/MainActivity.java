@@ -8,6 +8,14 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import cn.edu.zafu.coreprogress.helper.ProgressHelper;
+import cn.edu.zafu.coreprogress.listener.ProgressListener;
+import cn.edu.zafu.coreprogress.listener.impl.UIProgressListener;
+import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Headers;
 import okhttp3.MediaType;
@@ -16,14 +24,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
-import cn.edu.zafu.coreprogress.helper.ProgressHelper;
-import cn.edu.zafu.coreprogress.listener.ProgressListener;
-import cn.edu.zafu.coreprogress.listener.impl.UIProgressListener;
 
 public class MainActivity extends AppCompatActivity {
     private static final OkHttpClient client = new OkHttpClient.Builder()
@@ -115,14 +115,15 @@ public class MainActivity extends AppCompatActivity {
         //包装Response使其支持进度回调
         ProgressHelper.addProgressResponseListener(client, uiProgressResponseListener).newCall(request1).enqueue(new Callback() {
             @Override
-            public void onFailure(Request request, IOException e) {
+            public void onFailure(Call call, IOException e) {
                 Log.e("TAG", "error ", e);
             }
 
             @Override
-            public void onResponse(Response response) throws IOException {
+            public void onResponse(Call call, Response response) throws IOException {
                 Log.e("TAG", response.body().string());
             }
+
         });
     }
 
@@ -183,14 +184,15 @@ public class MainActivity extends AppCompatActivity {
         //开始请求
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Request request, IOException e) {
+            public void onFailure(Call call, IOException e) {
                 Log.e("TAG", "error ", e);
             }
 
             @Override
-            public void onResponse(Response response) throws IOException {
+            public void onResponse(Call call, Response response) throws IOException {
                 Log.e("TAG", response.body().string());
             }
+
         });
 
     }
