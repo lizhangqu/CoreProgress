@@ -108,9 +108,11 @@ call.enqueue(new Callback() {
         Log.e("TAG", "=============onResponse===============");
         Log.e("TAG", "request headers:" + response.request().headers());
         Log.e("TAG", "response headers:" + response.headers());
-        //wrap the response body with progress
         
-        ResponseBody responseBody = ProgressHelper.withProgress(response.body(), new ProgressUIListener() {
+        //your original response body
+        ResponseBody body = response.body()
+        //wrap the response body with progress
+        ResponseBody responseBody = ProgressHelper.withProgress(body, new ProgressUIListener() {
             @Override
             public void onUIProgressChanged(long numBytes, long totalBytes, float percent, float speed) {
                 Log.e("TAG", "=============start===============");
@@ -123,7 +125,6 @@ call.enqueue(new Callback() {
                 downloadInfo.setText("numBytes:" + numBytes + " bytes" + "\ntotalBytes:" + totalBytes + " bytes" + "\npercent:" + percent * 100 + " %" + "\nspeed:" + speed * 1000 / 1024 / 1024 + " MB/秒");
             }
         });
-
         //read the body to file
         BufferedSource source = responseBody.source();
         File outFile = new File("sdcard/temp.file");
