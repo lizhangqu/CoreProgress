@@ -18,6 +18,7 @@ I have provided a sample .
 See samples [here on Github](https://github.com/lizhangqu/CoreProgress/tree/master/sample)
 To run Sample application, clone the repository and use android studio to compile, install it on a connected device.
 
+You can alse see the test code [here on Github](https://github.com/lizhangqu/CoreProgress/blob/master/library/src/test/java/io/github/lizhangqu/coreprogress/ProgressTest.java)
 
 Usage
 -----
@@ -44,10 +45,10 @@ builder.url(url);
 //your original request body
 MultipartBody.Builder bodyBuilder = new MultipartBody.Builder();
 bodyBuilder.addFormDataPart("testFile", file.getName(), RequestBody.create(null, file));
-MultipartBody build = bodyBuilder.build();
+MultipartBody body = bodyBuilder.build();
 
-//wrap your request body with progress
-RequestBody requestBody = ProgressHelper.withProgress(build, new ProgressUIListener() {
+//wrap your original request body with progress
+RequestBody requestBody = ProgressHelper.withProgress(body, new ProgressUIListener() {
     @Override
     public void onUIProgressChanged(long numBytes, long totalBytes, float percent, float speed) {
         Log.e("TAG", "=============start===============");
@@ -111,7 +112,7 @@ call.enqueue(new Callback() {
         
         //your original response body
         ResponseBody body = response.body()
-        //wrap the response body with progress
+        //wrap the original response body with progress
         ResponseBody responseBody = ProgressHelper.withProgress(body, new ProgressUIListener() {
             @Override
             public void onUIProgressChanged(long numBytes, long totalBytes, float percent, float speed) {
