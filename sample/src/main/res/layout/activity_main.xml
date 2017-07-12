@@ -3,7 +3,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              tools:context=".MainActivity">
+              tools:context="io.github.lizhangqu.sample.MainActivity">
 
     <ProgressBar
         android:id="@+id/upload_progress"
@@ -12,6 +12,13 @@
         android:layout_height="wrap_content"
         android:max="100"
         android:progress="0"
+        />
+
+    <TextView
+        android:id="@+id/upload_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="upload info"
         />
 
     <Button
@@ -27,6 +34,13 @@
         android:layout_height="wrap_content"
         android:max="100"
         android:progress="0"
+        />
+
+    <TextView
+        android:id="@+id/download_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="download info"
         />
 
     <Button

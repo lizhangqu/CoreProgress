@@ -5,7 +5,7 @@ android {
     buildToolsVersion global_buildToolsVersion
 
     defaultConfig {
-        applicationId "cn.edu.zafu.sample"
+        applicationId "io.github.lizhangqu.sample"
         minSdkVersion global_minSdkVersion
         targetSdkVersion global_targetSdkVersion
         versionCode 1
@@ -23,5 +23,4 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile "com.android.support:appcompat-v7:${global_androidSupportVersion}"
     compile project(':library')
-    provided "com.squareup.okhttp3:okhttp:${global_okhttpVersion}"
 }

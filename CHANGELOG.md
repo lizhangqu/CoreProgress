@@ -12,3 +12,10 @@ version 0.0.3
 -------------
 
  - 重构代码，踢出多余类
+
+version 1.0.0
+-------------
+
+ - 重构代码，使用输入/输出流进行支持
+ - 修改groupId从cn.edu.zafu到io.github.lizhangqu
+ - 不向前兼容
