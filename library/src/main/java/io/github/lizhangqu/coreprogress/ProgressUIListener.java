@@ -25,7 +25,7 @@ import android.os.Message;
  * 流读写进度ui回调
  */
 public abstract class ProgressUIListener extends ProgressListener {
-    private final Handler mHandler;
+    private Handler mHandler;
 
     private static final int WHAT = 10000;
     private static final String CURRENT_BYTES = "numBytes";
@@ -34,26 +34,37 @@ public abstract class ProgressUIListener extends ProgressListener {
     private static final String SPEED = "speed";
 
     public ProgressUIListener() {
-        mHandler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                if (msg == null) {
-                    return;
-                }
-                if (msg.what != WHAT) {
-                    return;
-                }
-                Bundle data = msg.getData();
-                if (data == null) {
-                    return;
-                }
-                long numBytes = data.getLong(CURRENT_BYTES);
-                long totalBytes = data.getLong(TOTAL_BYTES);
-                float percent = data.getFloat(PERCENT);
-                float speed = data.getFloat(SPEED);
-                onUIProgressChanged(numBytes, totalBytes, percent, speed);
+
+    }
+
+    private void ensureHandler() {
+        if (mHandler != null) {
+            return;
+        }
+        synchronized (ProgressUIListener.class) {
+            if (mHandler == null) {
+                mHandler = new Handler(Looper.getMainLooper()) {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        if (msg == null) {
+                            return;
+                        }
+                        if (msg.what != WHAT) {
+                            return;
+                        }
+                        Bundle data = msg.getData();
+                        if (data == null) {
+                            return;
+                        }
+                        long numBytes = data.getLong(CURRENT_BYTES);
+                        long totalBytes = data.getLong(TOTAL_BYTES);
+                        float percent = data.getFloat(PERCENT);
+                        float speed = data.getFloat(SPEED);
+                        onUIProgressChanged(numBytes, totalBytes, percent, speed);
+                    }
+                };
             }
-        };
+        }
     }
 
     public final void onProgressChanged(long numBytes, long totalBytes, float percent, float speed) {
@@ -61,6 +72,7 @@ public abstract class ProgressUIListener extends ProgressListener {
             onUIProgressChanged(numBytes, totalBytes, percent, speed);
             return;
         }
+        ensureHandler();
         Message message = mHandler.obtainMessage();
         message.what = WHAT;
         Bundle data = new Bundle();
