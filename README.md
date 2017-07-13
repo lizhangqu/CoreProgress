@@ -6,7 +6,7 @@ CoreProgress is a framework to support OkHttp upload and download progress
 Changelog
 ---------
 
-Current version 1.0.0 released on 12th July 2017
+Current version 1.0.1 released on 13th July 2017
 
 See details in [CHANGELOG](https://github.com/lizhangqu/CoreProgress/blob/master/CHANGELOG.md)
 
@@ -28,7 +28,7 @@ Usage
 
 ```
 dependencies {
-  compile 'io.github.lizhangqu:coreprogress:1.0.0'
+  compile 'io.github.lizhangqu:coreprogress:1.0.1'
 }
 ```
 

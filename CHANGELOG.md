@@ -19,3 +19,10 @@ version 1.0.0
  - 重构代码，使用输入/输出流进行支持
  - 修改groupId从cn.edu.zafu到io.github.lizhangqu
  - 不向前兼容
+
+version 1.0.1
+-------------
+
+ - UI线程Handler懒初始化
+ - ProgressUIListener如果已经在UI线程中则直接回调，否则切换到UI线程回调
+ - 不向前兼容
