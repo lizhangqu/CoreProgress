@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -96,6 +97,14 @@ public class MainActivity extends AppCompatActivity {
         MultipartBody build = bodyBuilder.build();
 
         RequestBody requestBody = ProgressHelper.withProgress(build, new ProgressUIListener() {
+
+            @Override
+            public void onUIProgressStart(long totalBytes) {
+                super.onUIProgressStart(totalBytes);
+                Log.e("TAG", "onUIProgressStart:" + totalBytes);
+                Toast.makeText(getApplicationContext(), "开始上传：" + totalBytes, Toast.LENGTH_SHORT).show();
+            }
+
             @Override
             public void onUIProgressChanged(long numBytes, long totalBytes, float percent, float speed) {
                 Log.e("TAG", "=============start===============");
@@ -107,6 +116,13 @@ public class MainActivity extends AppCompatActivity {
                 uploadProgress.setProgress((int) (100 * percent));
                 uploadInfo.setText("numBytes:" + numBytes + " bytes" + "\ntotalBytes:" + totalBytes + " bytes" + "\npercent:" + percent * 100 + " %" + "\nspeed:" + speed * 1000 / 1024 / 1024 + "  MB/秒");
 
+            }
+
+            @Override
+            public void onUIProgressFinish() {
+                super.onUIProgressFinish();
+                Log.e("TAG", "onUIProgressFinish:");
+                Toast.makeText(getApplicationContext(), "结束上传", Toast.LENGTH_SHORT).show();
             }
         });
         builder.post(requestBody);
@@ -152,6 +168,14 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("TAG", "request headers:" + response.request().headers());
                 Log.e("TAG", "response headers:" + response.headers());
                 ResponseBody responseBody = ProgressHelper.withProgress(response.body(), new ProgressUIListener() {
+
+                    @Override
+                    public void onUIProgressStart(long totalBytes) {
+                        super.onUIProgressStart(totalBytes);
+                        Log.e("TAG", "onUIProgressStart:" + totalBytes);
+                        Toast.makeText(getApplicationContext(), "开始下载：" + totalBytes, Toast.LENGTH_SHORT).show();
+                    }
+
                     @Override
                     public void onUIProgressChanged(long numBytes, long totalBytes, float percent, float speed) {
                         Log.e("TAG", "=============start===============");
@@ -162,6 +186,13 @@ public class MainActivity extends AppCompatActivity {
                         Log.e("TAG", "============= end ===============");
                         downloadProgeress.setProgress((int) (100 * percent));
                         downloadInfo.setText("numBytes:" + numBytes + " bytes" + "\ntotalBytes:" + totalBytes + " bytes" + "\npercent:" + percent * 100 + " %" + "\nspeed:" + speed * 1000 / 1024 / 1024 + " MB/秒");
+                    }
+
+                    @Override
+                    public void onUIProgressFinish() {
+                        super.onUIProgressFinish();
+                        Log.e("TAG", "onUIProgressFinish:");
+                        Toast.makeText(getApplicationContext(), "结束下载", Toast.LENGTH_SHORT).show();
                     }
                 });
 
