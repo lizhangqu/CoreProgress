@@ -8,6 +8,7 @@ package io.github.lizhangqu.coreprogress;
  * @since 2017-07-12 16:19
  */
 public abstract class ProgressListener implements ProgressCallback {
+    boolean started;
     long lastRefreshTime = 0L;
     long lastBytesWritten = 0L;
     int minTime = 100;//最小回调时间100ms，避免频繁回调
@@ -20,6 +21,10 @@ public abstract class ProgressListener implements ProgressCallback {
      * @param percent    百分比
      */
     public final void onProgressChanged(long numBytes, long totalBytes, float percent) {
+        if (!started) {
+            onProgressStart(totalBytes);
+            started = true;
+        }
         if (numBytes == -1 && totalBytes == -1 && percent == -1) {
             onProgressChanged(-1, -1, -1, -1);
             return;
@@ -36,6 +41,9 @@ public abstract class ProgressListener implements ProgressCallback {
             lastRefreshTime = System.currentTimeMillis();
             lastBytesWritten = numBytes;
         }
+        if (numBytes == totalBytes || percent >= 1F) {
+            onProgressFinish();
+        }
     }
 
     /**
@@ -47,4 +55,20 @@ public abstract class ProgressListener implements ProgressCallback {
      * @param speed      速度 bytes/ms
      */
     public abstract void onProgressChanged(long numBytes, long totalBytes, float percent, float speed);
+
+    /**
+     * 进度开始
+     *
+     * @param totalBytes 总大小
+     */
+    public void onProgressStart(long totalBytes) {
+
+    }
+
+    /**
+     * 进度结束
+     */
+    public void onProgressFinish() {
+
+    }
 }
