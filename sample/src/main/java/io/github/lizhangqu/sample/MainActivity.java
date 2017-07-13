@@ -96,8 +96,30 @@ public class MainActivity extends AppCompatActivity {
         bodyBuilder.addFormDataPart("test", apkFile.getName(), RequestBody.create(null, apkFile));
         MultipartBody build = bodyBuilder.build();
 
+        //callback in original thread.
+//        ProgressListener progressListener = new ProgressListener() {
+//
+//            //if you don't need this method, don't override this methd. It isn't am abstract method, just an empty method.
+//            @Override
+//            public void onProgressStart(long totalBytes) {
+//                super.onProgressStart(totalBytes);
+//            }
+//
+//            @Override
+//            public void onProgressChanged(long numBytes, long totalBytes, float percent, float speed) {
+//
+//            }
+//
+//            //if you don't need this method, don't override this methd. It isn't am abstract method, just an empty method.
+//            @Override
+//            public void onProgressFinish() {
+//                super.onProgressFinish();
+//            }
+//        };
+
         RequestBody requestBody = ProgressHelper.withProgress(build, new ProgressUIListener() {
 
+            //if you don't need this method, don't override this methd. It isn't am abstract method, just an empty method.
             @Override
             public void onUIProgressStart(long totalBytes) {
                 super.onUIProgressStart(totalBytes);
@@ -118,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
+            //if you don't need this method, don't override this methd. It isn't am abstract method, just an empty method.
             @Override
             public void onUIProgressFinish() {
                 super.onUIProgressFinish();
@@ -169,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("TAG", "response headers:" + response.headers());
                 ResponseBody responseBody = ProgressHelper.withProgress(response.body(), new ProgressUIListener() {
 
+                    //if you don't need this method, don't override this methd. It isn't am abstract method, just an empty method.
                     @Override
                     public void onUIProgressStart(long totalBytes) {
                         super.onUIProgressStart(totalBytes);
@@ -188,6 +212,7 @@ public class MainActivity extends AppCompatActivity {
                         downloadInfo.setText("numBytes:" + numBytes + " bytes" + "\ntotalBytes:" + totalBytes + " bytes" + "\npercent:" + percent * 100 + " %" + "\nspeed:" + speed * 1000 / 1024 / 1024 + " MB/秒");
                     }
 
+                    //if you don't need this method, don't override this methd. It isn't am abstract method, just an empty method.
                     @Override
                     public void onUIProgressFinish() {
                         super.onUIProgressFinish();
