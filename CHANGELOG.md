@@ -25,4 +25,9 @@ version 1.0.1
 
  - UI线程Handler懒初始化
  - ProgressUIListener如果已经在UI线程中则直接回调，否则切换到UI线程回调
- - 不向前兼容
+ 
+version 1.0.2
+-------------
+
+ - ProgressListener中onProgressStart和onProgressFinish回调方法添加
+ - ProgressUIListener中onUIProgressStart和onUIProgressFinish回调方法添加
