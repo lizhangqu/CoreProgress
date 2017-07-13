@@ -114,7 +114,7 @@ public abstract class ProgressUIListener extends ProgressListener {
      *
      * @param totalBytes 总大小
      */
-    public void onProgressStart(long totalBytes) {
+    public final void onProgressStart(long totalBytes) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             onUIProgressStart(totalBytes);
             return;
@@ -131,7 +131,7 @@ public abstract class ProgressUIListener extends ProgressListener {
     /**
      * 进度结束
      */
-    public void onProgressFinish() {
+    public final void onProgressFinish() {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             onUIProgressFinish();
             return;
