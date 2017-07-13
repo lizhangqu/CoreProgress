@@ -49,6 +49,14 @@ MultipartBody body = bodyBuilder.build();
 
 //wrap your original request body with progress
 RequestBody requestBody = ProgressHelper.withProgress(body, new ProgressUIListener() {
+
+    //if you don't need this method, don't override this methd. It isn't an abstract method, just an empty method.
+    @Override
+    public void onUIProgressStart(long totalBytes) {
+        super.onUIProgressStart(totalBytes);
+        Log.e("TAG", "onUIProgressStart:" + totalBytes);
+    }
+
     @Override
     public void onUIProgressChanged(long numBytes, long totalBytes, float percent, float speed) {
         Log.e("TAG", "=============start===============");
@@ -60,6 +68,15 @@ RequestBody requestBody = ProgressHelper.withProgress(body, new ProgressUIListen
         uploadProgress.setProgress((int) (100 * percent));
         uploadInfo.setText("numBytes:" + numBytes + " bytes" + "\ntotalBytes:" + totalBytes + " bytes" + "\npercent:" + percent * 100 + " %" + "\nspeed:" + speed * 1000 / 1024 / 1024 + "  MB/秒");
     }
+    
+    //if you don't need this method, don't override this methd. It isn't an abstract method, just an empty method.
+    @Override
+    public void onUIProgressFinish() {
+        super.onUIProgressFinish();
+        Log.e("TAG", "onUIProgressFinish:");
+        Toast.makeText(getApplicationContext(), "结束上传", Toast.LENGTH_SHORT).show();
+    }
+    
 });
 
 //post the wrapped request body
@@ -83,7 +100,7 @@ call.enqueue(new Callback() {
 });
 ```
 
-if you don't need callback in UI thread, you can use ProgressListener to callback in your original Thread.
+if you don't need callback in UI thread, you can use ProgressListener to callback in your caller's original Thread.
 
 **download**
 
@@ -114,6 +131,14 @@ call.enqueue(new Callback() {
         ResponseBody body = response.body()
         //wrap the original response body with progress
         ResponseBody responseBody = ProgressHelper.withProgress(body, new ProgressUIListener() {
+        
+            //if you don't need this method, don't override this methd. It isn't an abstract method, just an empty method.
+            @Override
+            public void onUIProgressStart(long totalBytes) {
+                super.onUIProgressStart(totalBytes);
+                Log.e("TAG", "onUIProgressStart:" + totalBytes);
+            }
+            
             @Override
             public void onUIProgressChanged(long numBytes, long totalBytes, float percent, float speed) {
                 Log.e("TAG", "=============start===============");
@@ -125,6 +150,15 @@ call.enqueue(new Callback() {
                 downloadProgeress.setProgress((int) (100 * percent));
                 downloadInfo.setText("numBytes:" + numBytes + " bytes" + "\ntotalBytes:" + totalBytes + " bytes" + "\npercent:" + percent * 100 + " %" + "\nspeed:" + speed * 1000 / 1024 / 1024 + " MB/秒");
             }
+            
+            //if you don't need this method, don't override this methd. It isn't an abstract method, just an empty method.
+            @Override
+            public void onUIProgressFinish() {
+                super.onUIProgressFinish();
+                Log.e("TAG", "onUIProgressFinish:");
+                Toast.makeText(getApplicationContext(), "结束上传", Toast.LENGTH_SHORT).show();
+            }
+            
         });
         //read the body to file
         BufferedSource source = responseBody.source();
@@ -141,7 +175,34 @@ call.enqueue(new Callback() {
         
 ```
 
-if you don't need callback in UI thread, you can use ProgressListener to callback in your original Thread.
+if you don't need callback in UI thread, you can use ProgressListener to callback in your caller's original Thread.
+
+**callback in original thread**
+
+if you don't need callback in UI thread, you can use ProgressListener to callback in your caller's original Thread.
+
+```
+//callback in original thread.
+ProgressListener progressListener = new ProgressListener() {
+
+    //if you don't need this method, don't override this methd. It isn't an abstract method, just an empty method.
+    @Override
+    public void onProgressStart(long totalBytes) {
+        super.onProgressStart(totalBytes);
+    }
+
+    @Override
+    public void onProgressChanged(long numBytes, long totalBytes, float percent, float speed) {
+
+    }
+
+    //if you don't need this method, don't override this methd. It isn't an abstract method, just an empty method.
+    @Override
+    public void onProgressFinish() {
+        super.onProgressFinish();
+    }
+};
+```
 
 
 ## License
