@@ -83,7 +83,7 @@ call.enqueue(new Callback() {
 });
 ```
 
-if you don't need callback in UI thread, you can use ProgressListener.
+if you don't need callback in UI thread, you can use ProgressListener to callback in your original Thread.
 
 **download**
 
@@ -141,7 +141,7 @@ call.enqueue(new Callback() {
         
 ```
 
-if you don't need callback in UI thread, you can use ProgressListener.
+if you don't need callback in UI thread, you can use ProgressListener to callback in your original Thread.
 
 
 ## License
