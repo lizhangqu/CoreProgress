@@ -57,6 +57,10 @@ public abstract class ProgressUIListener extends ProgressListener {
     }
 
     public final void onProgressChanged(long numBytes, long totalBytes, float percent, float speed) {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            onUIProgressChanged(numBytes, totalBytes, percent, speed);
+            return;
+        }
         Message message = mHandler.obtainMessage();
         message.what = WHAT;
         Bundle data = new Bundle();
