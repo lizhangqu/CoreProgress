@@ -2,7 +2,6 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion global_compileSdkVersion
-    buildToolsVersion global_buildToolsVersion
 
     defaultConfig {
         minSdkVersion global_minSdkVersion
@@ -20,10 +19,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile "com.squareup.okhttp3:okhttp:${global_okhttpVersion}"
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation 'junit:junit:4.13.2'
+    implementation "com.squareup.okhttp3:okhttp:4.9.3"
 }
-
-apply from: "https://raw.githubusercontent.com/lizhangqu/common-gradle/master/artifact_release.gradle"
-

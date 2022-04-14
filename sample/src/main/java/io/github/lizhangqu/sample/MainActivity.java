@@ -16,7 +16,7 @@
 package io.github.lizhangqu.sample;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,7 +26,6 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import io.github.lizhangqu.coreprogress.ProgressHelper;
 import io.github.lizhangqu.coreprogress.ProgressUIListener;
@@ -43,11 +42,6 @@ import okio.BufferedSource;
 import okio.Okio;
 
 public class MainActivity extends AppCompatActivity {
-    private static final OkHttpClient client = new OkHttpClient.Builder()
-            .connectTimeout(1000, TimeUnit.MINUTES)
-            .readTimeout(1000, TimeUnit.MINUTES)
-            .writeTimeout(1000, TimeUnit.MINUTES)
-            .build();
     private Button upload, download;
     private TextView uploadInfo, downloadInfo;
     private ProgressBar uploadProgress, downloadProgeress;
@@ -86,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         uploadInfo.setText("start upload");
         String currentApkPath = getApplicationContext().getPackageResourcePath();
         File apkFile = new File(currentApkPath);
-        String url = "http://www.baidu.com";
+        String url = "https://www.baidu.com";
 
         OkHttpClient okHttpClient = new OkHttpClient();
         Request.Builder builder = new Request.Builder();
@@ -95,27 +89,6 @@ public class MainActivity extends AppCompatActivity {
         MultipartBody.Builder bodyBuilder = new MultipartBody.Builder();
         bodyBuilder.addFormDataPart("test", apkFile.getName(), RequestBody.create(null, apkFile));
         MultipartBody build = bodyBuilder.build();
-
-        //callback in original thread.
-//        ProgressListener progressListener = new ProgressListener() {
-//
-//            //if you don't need this method, don't override this methd. It isn't an abstract method, just an empty method.
-//            @Override
-//            public void onProgressStart(long totalBytes) {
-//                super.onProgressStart(totalBytes);
-//            }
-//
-//            @Override
-//            public void onProgressChanged(long numBytes, long totalBytes, float percent, float speed) {
-//
-//            }
-//
-//            //if you don't need this method, don't override this methd. It isn't an abstract method, just an empty method.
-//            @Override
-//            public void onProgressFinish() {
-//                super.onProgressFinish();
-//            }
-//        };
 
         RequestBody requestBody = ProgressHelper.withProgress(build, new ProgressUIListener() {
 
@@ -170,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void download() {
         uploadInfo.setText("start download");
-        String url = "http://assets.geilicdn.com/channelapk/1000n_shurufa_1.9.6.apk";
+        String url = "https://speed.hetzner.de/100MB.bin";
 
         OkHttpClient okHttpClient = new OkHttpClient();
         Request.Builder builder = new Request.Builder();
@@ -223,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
 
                 BufferedSource source = responseBody.source();
 
-                File outFile = new File("sdcard/temp.apk");
+                File outFile = new File(getFilesDir(), "temp.bin");
                 outFile.delete();
                 outFile.getParentFile().mkdirs();
                 outFile.createNewFile();

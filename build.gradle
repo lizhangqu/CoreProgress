@@ -1,24 +1,25 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    apply from: "https://raw.githubusercontent.com/lizhangqu/common-gradle/master/common_version.gradle"
-    apply from: "https://raw.githubusercontent.com/lizhangqu/common-gradle/master/common_function.gradle"
+    ext {
+        global_compileSdkVersion = 31
+        global_minSdkVersion = 21
+        global_targetSdkVersion = 31
+    }
     repositories {
+        google()
         jcenter()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:2.2.3"
-        classpath "com.github.dcendents:android-maven-gradle-plugin:1.5"
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+        classpath "com.android.tools.build:gradle:4.0.2"
+        classpath "com.github.dcendents:android-maven-gradle-plugin:2.1"
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
     }
 }
 
-apply from: "https://raw.githubusercontent.com/lizhangqu/common-gradle/master/common_version.gradle"
-apply from: "https://raw.githubusercontent.com/lizhangqu/common-gradle/master/common_function.gradle"
-
-
 allprojects {
     repositories {
+        google()
         jcenter()
     }
 }
